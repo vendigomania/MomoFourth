@@ -100,9 +100,9 @@ public class ColorfulSlapGame : MonoBehaviour
     {
         SoundManager.Instance.Click();
 
-        tasks[0].id = (currentLevel + 9) % 3;
-        tasks[2].id = (currentLevel + 9) % 7;
-        tasks[1].id = (currentLevel + 9) % 5;
+        tasks[0].id = (currentLevel + 9) % 5;
+        tasks[1].id = (currentLevel + 9) % 7;
+        tasks[2].id = (currentLevel + 9) % 9;
 
         tasks[0].value = 2 + (currentLevel + 1) * (currentLevel % 9 == tasks[1].id? tasks[0].id + 1 : 1);
 
@@ -117,6 +117,7 @@ public class ColorfulSlapGame : MonoBehaviour
         levelsScreen.SetActive(false);
         playScreen.SetActive(true);
         tasksScreen.SetActive(true);
+        pauseScreen.SetActive(false);
 
         FlipCount = 5;
         DiscoCount = 1;
@@ -137,6 +138,12 @@ public class ColorfulSlapGame : MonoBehaviour
         pauseScreen.SetActive(false);
 
         StopAllCoroutines();
+    }
+
+    public void NextLevel()
+    {
+        currentLevel++;
+        LoadLevel();
     }
 
     //Boosters
@@ -185,8 +192,6 @@ public class ColorfulSlapGame : MonoBehaviour
         }
 
     }
-
-
 
     private void SetTasks(Image[] icons, Text[] valueLabels)
     {

@@ -26,6 +26,8 @@ namespace MatchThreeEngine
 
 		[SerializeField] private bool ensureNoStartingMatches;
 
+		[SerializeField] private RectTransform selectBorder;
+
 		private readonly List<Tile> _selection = new List<Tile>();
 
 		private bool _isSwapping;
@@ -53,21 +55,21 @@ namespace MatchThreeEngine
 
 		public void DiscoBooster()
         {
-			var type = _selection[0].Type;
+			var typeId = _selection[0].Type.id;
 			var count = 0;
 
 			_selection.Clear();
 
 			foreach (var row in rows)
 				foreach (var tile in row.tiles)
-					if(tile.Type == type)
+					if(tile.Type.id == typeId)
                     {
 						count++;
 						tile.Type = tileTypes[Random.Range(0, tileTypes.Length)];
                     }
 
 
-			OnMatch?.Invoke(type, count);
+			OnMatch?.Invoke(tileTypes.First(type => type.id == typeId), count);
 
 			var matrix = Matrix;
 
@@ -84,9 +86,9 @@ namespace MatchThreeEngine
 			var center = _selection[0];
 			_selection.Clear();
 
-			for(int i = Mathf.Max(0, center.x - 2); i < Mathf.Min(rows.Length, center.x + 3); i++)
+			for(int i = Mathf.Max(0, center.y - 2); i < Mathf.Min(rows.Length, center.y + 3); i++)
             {
-				for (int j = Mathf.Max(0, center.y - 2); j < Mathf.Min(rows[0].tiles.Length, center.y + 3); j++)
+				for (int j = Mathf.Max(0, center.x - 2); j < Mathf.Min(rows[0].tiles.Length, center.x + 3); j++)
                 {
 					OnMatch?.Invoke(rows[i].tiles[j].Type, 1);
 
@@ -155,6 +157,11 @@ namespace MatchThreeEngine
 					Select(GetTile(bestMove.X2, bestMove.Y2));
 				}
 			}
+
+			if(selectBorder.gameObject.activeSelf && ChoiseCount == 0)
+            {
+				selectBorder.gameObject.SetActive(false);
+            }
 		}
 
 		private IEnumerator EnsureNoStartingMatches()
@@ -199,7 +206,18 @@ namespace MatchThreeEngine
 				else
 				{
 					_selection.Add(tile);
+
+					selectBorder.gameObject.SetActive(true);
+					selectBorder.SetParent(tile.transform);
+
+					selectBorder.anchoredPosition = Vector2.zero;
+					selectBorder.localScale = Vector2.one;
 				}
+			}
+			else
+            {
+				_selection.Remove(tile);
+
 			}
 
 			if (_selection.Count < 2) return;
