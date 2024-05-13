@@ -13,19 +13,27 @@ public class LevelStartButton : MonoBehaviour
 
     public static UnityAction<int> OnLaunch;
 
-    // Start is called before the first frame update
-    private void Start()
+    public void SetLevel(int _level)
     {
-        
-    }
+        level = _level;
 
-    private void OnEnable()
-    {
-        
+        UpdateView();
     }
 
     public void Launch()
     {
+        OnLaunch?.Invoke(level);
+    }
 
+    private void UpdateView()
+    {
+        int starsCount = PlayerPrefs.GetInt($"Level{level}", 0);
+
+        for(var i = 0; i < stars.Length; i++)
+            stars[i].gameObject.SetActive(i < starsCount);
+
+        levelLable.text = level.ToString();
+
+        launchButton.gameObject.SetActive(level == 1 || PlayerPrefs.GetInt($"Level{level - 1}", 0) > 0);
     }
 }
