@@ -35,6 +35,10 @@ public class ColorfulSlapGame : MonoBehaviour
     [SerializeField] private GameObject[] resultStars;
     [SerializeField] private Text resultLable;
 
+    [SerializeField] private ParticleSystem flipParticle;
+    [SerializeField] private ParticleSystem discoParticle;
+    [SerializeField] private ParticleSystem boomParticle;
+
     private (int id, int value)[] tasks = new(int, int)[3];
 
     // Start is called before the first frame update
@@ -150,19 +154,25 @@ public class ColorfulSlapGame : MonoBehaviour
     public void Flip()
     {
         FlipCount--;
-        board.FlipBooster();
+        board.FlipBooster(flipParticle.transform);
+
+        flipParticle.Play();
     }
 
     public void Disco()
     {
         DiscoCount--;
         board.DiscoBooster();
+
+        discoParticle.Play();
     }
 
     public void Boom()
     {
         BoomCount--;
-        board.BoomBooster();
+        board.BoomBooster(boomParticle.transform);
+
+        boomParticle.Play();
     }
 
     private void OnMatch(MatchThreeEngine.TileTypeAsset type, int count)

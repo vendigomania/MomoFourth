@@ -40,7 +40,7 @@ namespace MatchThreeEngine
 		public int ChoiseCount => _selection.Count;
 		public TileTypeAsset[] TileTypes => tileTypes;
 
-		public void FlipBooster()
+		public void FlipBooster(Transform particle)
         {
 			_selection.Clear();
 
@@ -48,8 +48,13 @@ namespace MatchThreeEngine
 
 			if (bestMove != null)
 			{
-				Select(GetTile(bestMove.X1, bestMove.Y1));
-				Select(GetTile(bestMove.X2, bestMove.Y2));
+				var one = GetTile(bestMove.X1, bestMove.Y1);
+				var two = GetTile(bestMove.X2, bestMove.Y2);
+
+				particle.position = (one.transform.position + two.transform.position) / 2;
+
+				Select(one);
+				Select(two);
 			}
 		}
 
@@ -81,7 +86,7 @@ namespace MatchThreeEngine
 			}
 		}
 
-		public void BoomBooster()
+		public void BoomBooster(Transform particle)
         {
 			var center = _selection[0];
 			_selection.Clear();
@@ -95,6 +100,8 @@ namespace MatchThreeEngine
 					rows[i].tiles[j].Type = tileTypes[Random.Range(0, tileTypes.Length)];
 				}
 			}
+
+			particle.position = center.transform.position;
 
 			var matrix = Matrix;
 
