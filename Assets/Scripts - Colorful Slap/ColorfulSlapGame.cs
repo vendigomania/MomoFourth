@@ -127,6 +127,8 @@ public class ColorfulSlapGame : MonoBehaviour
         DiscoCount = 1;
         BoomCount = 3;
 
+        levelLable.text = $"LEVEL: {currentLevel}";
+
         remainSeconds = 180;
     }
 
