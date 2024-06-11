@@ -227,7 +227,8 @@ public class ColorfulSlapGame : MonoBehaviour
         resultStars[1].SetActive(remainSeconds > 60);
         resultStars[2].SetActive(remainSeconds > 90);
 
-        PlayerPrefs.SetInt($"Level{currentLevel}", resultStars.Count(star => star.activeSelf));
+        PlayerPrefs.SetInt($"Level{currentLevel}", 
+            Mathf.Max(PlayerPrefs.GetInt($"Level{currentLevel}", 0), resultStars.Count(star => star.activeSelf)));
     }
 
     int remainSeconds = 0;
